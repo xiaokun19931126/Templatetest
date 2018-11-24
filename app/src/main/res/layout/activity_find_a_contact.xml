@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <TextView
+        android:id="@+id/contact_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="当前用户是"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/btn_start_chat_xk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="对xk发起聊天"
+        app:layout_constraintTop_toBottomOf="@id/contact_et" />
+
+
+    <Button
+        android:id="@+id/btn_start_chat_xc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="对xc发起聊天"
+        app:layout_constraintTop_toBottomOf="@id/btn_start_chat_xk" />
+
+    <Button
+        android:id="@+id/btn_start_chat_xx"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="对xx发起聊天"
+        app:layout_constraintTop_toBottomOf="@id/btn_start_chat_xc" />
+
+    <Button
+        android:id="@+id/btn_start_chat_pd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="对pd发起聊天"
+        app:layout_constraintTop_toBottomOf="@id/btn_start_chat_xx" />
+
+    <Button
+        android:id="@+id/btn_start_chat_xiaocai"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="对xiaocai发起聊天"
+        app:layout_constraintTop_toBottomOf="@id/btn_start_chat_pd" />
+
+    <Button
+        android:id="@+id/sign_out_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="退出登陆"
+        app:layout_constraintTop_toBottomOf="@id/btn_start_chat_xiaocai" />
+
+</android.support.constraint.ConstraintLayout>
