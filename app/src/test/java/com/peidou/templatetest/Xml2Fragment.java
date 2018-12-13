@@ -1,7 +1,5 @@
 package com.peidou.templatetest;
 
-import android.widget.Button;
-
 import org.junit.Test;
 
 import java.io.File;
@@ -15,12 +13,12 @@ import java.util.List;
 /**
  * <pre>
  *      作者  ：肖坤
- *      时间  ：2018/11/22
+ *      时间  ：2018/11/29
  *      描述  ：
  *      版本  ：1.0
  * </pre>
  */
-public class Xml2Activity {
+public class Xml2Fragment {
 
     public String company = "peidou";
     public String appName = "templatetest";
@@ -34,11 +32,11 @@ public class Xml2Activity {
         String activityPathDir = rootDir + activityApp;
 
         //你的Activity布局xml所在路径
-        File file = new File(xmlPathDir + "activity_test1.xml");
+        File file = new File(xmlPathDir + "fragment_b.xml");
         //你的Activity的java类放在哪个包里
         File out = new File(activityPathDir);
         //你的Activity的名字--不要加.java
-        String name = "TestActivity6";
+        String name = "BFragment";
         initView(file, out, name);
     }
 
@@ -54,7 +52,7 @@ public class Xml2Activity {
         try {
             HashMap<String, String> map = split(readFile(file));
             System.out.println(map.toString());
-            String result = contactActivity(file, out, name, map);
+            String result = contactFragment(file, out, name, map);
 
             //写出到磁盘
             File outFile = new File(out, name + ".java");
@@ -73,7 +71,7 @@ public class Xml2Activity {
         }
     }
 
-    private static String contactActivity(File file, File out, String name, HashMap<String, String> map) {
+    private static String contactFragment(File file, File out, String name, HashMap<String, String> map) {
         StringBuilder sb = new StringBuilder();
         String path = out.getAbsolutePath();
         path.split("java");
@@ -85,7 +83,7 @@ public class Xml2Activity {
                 "import android.support.annotation.Nullable;\n" +
                 "import android.view.View;\n" +
                 "import android.os.Bundle;\n" +
-                "import android.support.v7.app.AppCompatActivity;\n");
+                "import android.support.v4.app.Fragment;;\n");
         sb.append("/**\n" +
                 " * <pre>\n" +
                 " *      作者  ：肖坤\n" +
@@ -94,24 +92,31 @@ public class Xml2Activity {
                 " *      版本  ：1.0\n" +
                 " * </pre>\n" +
                 " */\n");
-        sb.append("public class " + name + " extends AppCompatActivity implements View.OnClickListener{\n");
+        sb.append("public class " + name + " extends Fragment implements View.OnClickListener{\n");
         map.forEach((id, view) -> {
             sb.append("public ").append(view).append(" ").append(formatId2Field(id)).append(";").append("\r\n");
         });
-        sb.append("public static void start(Context context) {\n" +
-                "   Intent starter = new Intent(context, " + name + ".class" + ");\n" +
-                "   context.startActivity(starter);\n" +
+        sb.append("public static " + name + " newInstance(){\n" +
+                "    Bundle args = new Bundle();\n" +
+                name + " fragment = new " + name + "();\n" +
+                "fragment.setArguments(args);\n" +
+                "return fragment;\n" +
                 "}\n");
         sb.append("@Override\n");
-        sb.append("protected void onCreate(@Nullable Bundle savedInstanceState) {\n");
-        sb.append("super.onCreate(savedInstanceState);\n");
-        sb.append("setContentView(R.layout." + file.getName().substring(0, file.getName().length() - 4) + ");\n");
-        sb.append("initView();\n");
+        sb.append("public void onAttach(Context context) {\n");
+        sb.append("super.onAttach(context);\n");
         sb.append("}\n");
-        sb.append("private void initView() {\n");
+        sb.append("@Nullable\n");
+        sb.append("@Override\n");
+        sb.append("public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {\n");
+        sb.append("View view = inflater.inflate(R.layout." + file.getName().substring(0, file.getName().length() - 4) + ", container, false);\n");
+        sb.append("initView(view);\n");
+        sb.append("return view;\n");
+        sb.append("}\n");
+        sb.append("private void initView(View view) {\n");
         map.forEach((id, view) -> {
             sb.append(formatId2Field(id))
-                    .append("= findViewById(R.id.")
+                    .append("= view.findViewById(R.id.")
                     .append(id).append(");").append("\r\n");
         });
 
@@ -147,6 +152,19 @@ public class Xml2Activity {
         return sb.toString();
     }
 
+    /**
+     * 获取时间字符串
+     *
+     * @return 类似2018/11/22
+     */
+    private static String getTimeStr() {
+        Calendar instance = Calendar.getInstance();
+        int year = instance.get(Calendar.YEAR);
+        int month = instance.get(Calendar.MONTH);
+        int day = instance.get(Calendar.DAY_OF_MONTH);
+        return year + "/" + (month + 1) + "/" + day;
+    }
+
     private static String formatId2Field(String id) {
         if (id.contains("_")) {
             String[] partStrArray = id.split("_");
@@ -169,19 +187,6 @@ public class Xml2Activity {
         String a = str.substring(0, 1);
         String tail = str.substring(1);
         return a.toUpperCase() + tail;
-    }
-
-    /**
-     * 获取时间字符串
-     *
-     * @return 类似2018/11/22
-     */
-    private static String getTimeStr() {
-        Calendar instance = Calendar.getInstance();
-        int year = instance.get(Calendar.YEAR);
-        int month = instance.get(Calendar.MONTH);
-        int day = instance.get(Calendar.DAY_OF_MONTH);
-        return year + "/" + (month + 1) + "/" + day;
     }
 
     /**
@@ -220,6 +225,7 @@ public class Xml2Activity {
             }
         }
     }
+
 
     private static HashMap<String, String> split(String res) {
         String[] split = res.split("<");
